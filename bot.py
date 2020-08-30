@@ -26,6 +26,7 @@ class TradingBot:
         }
         self.account_info = self._getAccountInfo()
 
+
     def _getAccountInfo(self):
         """Get request to obtain account info associated with ID and SECRET keys
 
@@ -34,6 +35,7 @@ class TradingBot:
         """
 
         return requests.get(f'{self.BASE_ENDPOINT}/v2/account', headers=self.HEADER).json()
+
 
     def createOrder(self, order_data):
         """Post request to place order described by order_data
@@ -47,14 +49,33 @@ class TradingBot:
 
         return requests.post(f'{self.BASE_ENDPOINT}/v2/orders', json=order_data, headers=self.HEADER).json()
 
-    def cancelOrder(self, order_id):
-        """Delete request to cancel order with id order_id
+
+    def updateOrder(self, order_id, update_data):
+        """Patch request to update parameters of an order
 
             Parameters:
-                order_id: string id of the order to be canceled
-        """
+                order_id: string id of the order to be updated
+                update_data: dictionary with updated parameters as specified in the Alpaca API documentation
         
-        requests.delete(f'{self.BASE_ENDPOINT}/v2/orders/{order_id}', headers=self.HEADER)
+            Returns:
+                dictionary with details of updated order
+        """
+
+        return requests.patch(f'{self.BASE_ENDPOINT}/v2/orders/{order_id}', json=update_data, headers=self.HEADER).json()
+
+
+    def getOrder(self, order_id):
+        """Get request to get order info of order with id order_id
+
+            Parameters:
+                order_id: string id of the order to be found
+            
+            Returns:
+                dictionary with details of the order
+        """
+
+        return requests.get(f'{self.BASE_ENDPOINT}/v2/orders/{order_id}', headers=self.HEADER).json()
+
 
     def getOpenOrders(self):
         """Get request to obtain list of open orders
@@ -76,8 +97,27 @@ class TradingBot:
 
         return requests.get(f'{self.BASE_ENDPOINT}/v2/orders', json=params, headers=self.HEADER).json()
 
+    
+    def cancelOrder(self, order_id):
+        """Delete request to cancel order with id order_id
+
+            Parameters:
+                order_id: string id of the order to be canceled
+        """
+        
+        requests.delete(f'{self.BASE_ENDPOINT}/v2/orders/{order_id}', headers=self.HEADER)
+
+
+    def cancelAllOrders(self):
+        """Delete request to cancel all currently open orders
+
+            Returns list of objects with details on canceled orders
+        """
+
+        return requests.delete(f'{self.BASE_ENDPOINT}/v2/orders', headers=self.HEADER).json()
+
+
 # testing
-# places an order for apple stock and immediately cancels it
 
 tb = TradingBot('keys.cfg')
 
@@ -93,8 +133,22 @@ order_data = {
     'client_order_id': None
 }
 
+update_data = {
+    'qty': 10
+}
+
+# create order for 1 apple share
 tb.createOrder(order_data)
-open_orders = tb.getOpenOrders()
-print(open_orders)
-tb.cancelOrder(open_orders[0]['id'])
+print(tb.getOpenOrders())
+
+# update order to be 10 apple share
+#print(tb.updateOrder(open_orders[0]['id'], update_data))
+#print(tb.getOpenOrders())
+
+# cancel order
+#tb.cancelOrder(open_orders[0]['id'])
+#print(tb.getOpenOrders())
+
+# cancel all orders
+tb.cancelAllOrders()
 print(tb.getOpenOrders())
