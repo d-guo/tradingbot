@@ -107,10 +107,34 @@ class Alpaca:
     def cancelAllOrders(self):
         """Delete request to cancel all currently open orders
 
-            Returns list of objects with details on canceled orders
+            Returns:
+                list of objects with details on canceled orders
         """
 
         return requests.delete(f'{self.BASE_ENDPOINT}/v2/orders', headers=self.HEADER).json()
+
+    
+    def getAsset(self, symbol):
+        """Get request to obtain details of asset symbol
+
+            Parameters:
+                symbol: string of asset symbol
+            
+            Returns:
+                dictionary with details of asset
+        """
+
+        return requests.get(f'{self.BASE_ENDPOINT}/v2/assets/{symbol}', headers=self.HEADER).json()
+
+
+    def getAllAssets(self):
+        """Get request to obtain list of all assets (both active and inactive)
+
+            Returns:
+                list of dictionaries with details of all assets
+        """
+
+        return requests.get(f'{self.BASE_ENDPOINT}/v2/assets', headers=self.HEADER).json()
 
 
 # testing
@@ -148,3 +172,5 @@ print(tb.getOpenOrders())
 # cancel all orders
 tb.cancelAllOrders()
 print(tb.getOpenOrders())
+
+print(tb.getAsset('AAPL'))
