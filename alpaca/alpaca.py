@@ -182,3 +182,13 @@ class Alpaca:
         """
 
         return requests.get(f'{self.BASE_ENDPOINT}/v2/assets', headers=self.HEADER).json()
+    
+
+    def getClock(self):
+        """Get request to obtain time from Alpaca API
+
+            Returns:
+                dictionary with clock information
+        """
+
+        return requests.get(f'{self.BASE_ENDPOINT}/v2/clock', headers=self.HEADER).json()
