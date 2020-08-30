@@ -113,7 +113,53 @@ class Alpaca:
 
         return requests.delete(f'{self.BASE_ENDPOINT}/v2/orders', headers=self.HEADER).json()
 
+
+    def getPosition(self, symbol):
+        """Get request to obtain details of position symbol
+
+            Parameters:
+                symbol: string of position symbol
+            
+            Returns:
+                dictionary with details of position
+        """
+
+        return requests.get(f'{self.BASE_ENDPOINT}/v2/positions/{symbol}', headers=self.HEADER).json()
+
+
+    def getOpenPositions(self):
+        """Get request to obtain list of open positions
+
+            Returns:
+                list of position dictionaries with details of open positions
+        """
+
+        return requests.get(f'{self.BASE_ENDPOINT}/v2/positions', headers=self.HEADER).json()
     
+
+    def closePosition(self, symbol):
+        """Delete request to close position symbol
+
+            Parameters:
+                symbol: string of position symbol
+            
+            Returns:
+                dictionary with details of the order
+        """
+
+        return requests.delete(f'{self.BASE_ENDPOINT}/v2/positions/{symbol}', headers=self.HEADER).json()
+
+    
+    def closeAllPositions(self):
+        """Delete request to close all position
+            
+            Returns:
+                list of objects with details on closed positions
+        """
+
+        return requests.delete(f'{self.BASE_ENDPOINT}/v2/positions', headers=self.HEADER).json()
+
+
     def getAsset(self, symbol):
         """Get request to obtain details of asset symbol
 
@@ -135,42 +181,3 @@ class Alpaca:
         """
 
         return requests.get(f'{self.BASE_ENDPOINT}/v2/assets', headers=self.HEADER).json()
-
-
-# testing
-
-tb = Alpaca('keys.cfg')
-
-order_data = {
-    'symbol': 'AAPL',
-    'qty': 1,
-    'side': 'buy',
-    'type': 'market',
-    'time_in_force': 'day',
-    'limit_price': None,
-    'stop_price': None,
-    'extended_hours': False,
-    'client_order_id': None
-}
-
-update_data = {
-    'qty': 10
-}
-
-# create order for 1 apple share
-tb.createOrder(order_data)
-print(tb.getOpenOrders())
-
-# update order to be 10 apple share
-#print(tb.updateOrder(open_orders[0]['id'], update_data))
-#print(tb.getOpenOrders())
-
-# cancel order
-#tb.cancelOrder(open_orders[0]['id'])
-#print(tb.getOpenOrders())
-
-# cancel all orders
-tb.cancelAllOrders()
-print(tb.getOpenOrders())
-
-print(tb.getAsset('AAPL'))
