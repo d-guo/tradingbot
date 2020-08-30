@@ -1,11 +1,7 @@
 import requests
 
-class TradingBot:
-    """Class to performs trades using Alpaca API
-
-    Uses:
-        1. wrapper for Alpaca API
-        2. implement strategy and deploy to some cloud service
+class Alpaca:
+    """Wrapper for Alpaca API
     """
 
     def __init__(self, path_to_config):
@@ -119,7 +115,7 @@ class TradingBot:
 
 # testing
 
-tb = TradingBot('keys.cfg')
+tb = Alpaca('keys.cfg')
 
 order_data = {
     'symbol': 'AAPL',
