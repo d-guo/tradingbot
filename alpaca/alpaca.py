@@ -1,5 +1,6 @@
 import requests
 
+
 class Alpaca:
     """Wrapper for Alpaca API
     """
