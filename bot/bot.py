@@ -55,11 +55,12 @@ class TradingBot:
             if len(self.alpaca.getOpenOrders()) != 0:
                 self.alpaca.cancelAllOrders()
                 logging.info('canceled open order for aapl stock')
-                return
-
-            aapl_order['side'] = 'sell'
-            self.alpaca.createOrder(aapl_order)
-            logging.info('sold 2 aapl stock')
-        
+            elif int(self.alpaca.getPosition('AAPL')['qty']) == 2:
+                aapl_order['side'] = 'sell'
+                self.alpaca.createOrder(aapl_order)
+                logging.info('sold 2 aapl stock')
+            else:
+                logging.info('did nothing... no expected profit')
+                
         else:
-            logging.info('did nothing... not within optimal hours or no expected profit')
+            logging.info('did nothing... not within optimal hours')
