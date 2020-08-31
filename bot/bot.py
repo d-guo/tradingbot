@@ -54,8 +54,8 @@ class TradingBot:
         elif START_s <= current_time < END_s:
             if len(self.alpaca.getOpenOrders()) != 0:
                 self.alpaca.cancelAllOrders()
-                logging.info('canceled open order for aapl stock')
-            elif int(self.alpaca.getPosition('AAPL')['qty']) != 0:
+                logging.info('canceled open orders for aapl stock')
+            elif self.alpaca.getPosition('AAPL')['code'] != 40410000:
                 aapl_order['side'] = 'sell'
                 self.alpaca.createOrder(aapl_order)
                 logging.info('sold 2 aapl stock')
