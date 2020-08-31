@@ -1,4 +1,4 @@
-from alpaca.alpaca import Alpaca
+from ..alpaca.alpaca import Alpaca
 
 
 class TradingBot:
@@ -29,8 +29,9 @@ class TradingBot:
             Current Usage: just buys and sells 2 AAPL shares every day
         """
 
-        START_b, END_b, START_s, END_s = '17:15', '17:25', '17:45', '17:50'
+        START_b, END_b, START_s, END_s = '19:20', '19:30', '19:45', '19:55'
         current_time = self.alpaca.getClock()['timestamp'][11:16]
+        print('current time:', current_time)
         
         aapl_order = {
             'symbol': 'AAPL',
@@ -48,7 +49,7 @@ class TradingBot:
             self.alpaca.createOrder(aapl_order)
             print('bought 2 aapl stock')
 
-        elif 'START_s' <= current_time < END_s:
+        elif START_s <= current_time < END_s:
             if len(self.alpaca.getOpenOrders()) != 0:
                 self.alpaca.cancelAllOrders()
                 print('canceled open order for aapl stock')
@@ -60,5 +61,3 @@ class TradingBot:
         
         else:
             print('did nothing... not within optimal hours or no expected profit')
-
-TradingBot().invoke()
