@@ -31,9 +31,9 @@ class TradingBot:
             Current Usage: just buys and sells 2 AAPL shares every day
         """
 
-        START_b, END_b, START_s, END_s = '21:20', '21:30', '21:45', '21:55'
+        START_b, END_b, START_s, END_s = '00:00', '00:05', '12:00', '12:05'
         current_time = self.alpaca.getClock()['timestamp'][11:16]
-        print('current time:', current_time)
+        logging.info(f'alpaca time: {current_time}')
         
         aapl_order = {
             'symbol': 'AAPL',
@@ -55,12 +55,12 @@ class TradingBot:
             if len(self.alpaca.getOpenOrders()) != 0:
                 self.alpaca.cancelAllOrders()
                 logging.info('canceled open order for aapl stock')
-            elif int(self.alpaca.getPosition('AAPL')['qty']) == 2:
+            elif int(self.alpaca.getPosition('AAPL')['qty']) != 0:
                 aapl_order['side'] = 'sell'
                 self.alpaca.createOrder(aapl_order)
                 logging.info('sold 2 aapl stock')
             else:
                 logging.info('did nothing... no expected profit')
-                
+
         else:
             logging.info('did nothing... not within optimal hours')
